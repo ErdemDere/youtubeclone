@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YouTube Clone - Watch and share videos">
+    <title>YouTube Clone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" id="menuBtn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+            <a href="/" class="logo">
+                <svg viewBox="0 0 90 20" width="90" height="20">
+                    <g fill="none">
+                        <path d="M27.973 18.757V2.124h2.568v16.633z" fill="#282828" />
+                        <path
+                            d="M33.898 18.757V7.076h2.421v1.613h.094c.282-.564.706-1.012 1.272-1.342.566-.33 1.224-.495 1.976-.495.753 0 1.4.165 1.94.495.541.33.925.778 1.153 1.342h.095c.329-.553.79-1 1.389-1.342.598-.33 1.318-.495 2.162-.495 1.082 0 1.966.342 2.65 1.025.684.684 1.026 1.684 1.026 3v7.88h-2.52v-7.41c0-.788-.207-1.359-.624-1.717-.416-.358-.925-.537-1.53-.537-.706 0-1.254.22-1.647.66-.392.44-.588 1.007-.588 1.7v7.304h-2.497v-7.504c0-.659-.195-1.189-.588-1.588-.393-.4-.906-.6-1.542-.6-.424 0-.818.113-1.177.341-.36.229-.647.548-.86.96-.212.41-.317.889-.317 1.435v6.956h-2.52z"
+                            fill="#282828" />
+                        <path
+                            d="M8.654 0c.964.032 3.936.182 5.14.506 1.404.364 2.51 1.455 2.877 2.843.506 1.817.506 5.607.506 5.607s0 3.79-.506 5.608c-.367 1.387-1.473 2.478-2.876 2.842-.724.182-1.949.312-3.263.393-.954.06-1.94.093-2.78.11-.575.01-1.086.015-1.496.015-.41 0-.921-.005-1.495-.016-.84-.016-1.827-.05-2.781-.11-1.314-.08-2.54-.21-3.263-.392C1.313 17.042.206 15.951-.16 14.564-.667 12.745-.667 8.956-.667 8.956s0-3.79.506-5.607C.206 1.961 1.313.87 2.717.506 3.44.325 4.666.194 5.98.114c.954-.06 1.94-.093 2.78-.11C9.335-.007 9.847-.01 10.257-.01c.41 0 .921.003 1.495.015.84.017 1.827.05 2.78.11z"
+                            fill="#FF0000" transform="translate(-1 1)" />
+                        <path fill="#FFF" d="M7.5 5.956l5.5 3-5.5 3z" transform="translate(-1 1)" />
+                        <path d="M55.973 18.757l-3.79-11.68h2.662l2.45 8.636h.117l2.45-8.637h2.663l-3.79 11.681z"
+                            fill="#282828" />
+                        <path
+                            d="M63.898 18.757V7.076h2.42v1.565h.094c.235-.541.606-.972 1.113-1.295.506-.323 1.13-.483 1.87-.483.752 0 1.389.16 1.912.483.523.323.882.754 1.077 1.295h.094c.259-.53.676-.958 1.248-1.283.571-.325 1.253-.495 2.044-.495 1.011 0 1.835.318 2.473.954.636.635.954 1.565.954 2.79v7.75h-2.52v-7.28c0-.695-.19-1.2-.57-1.518-.383-.318-.854-.477-1.413-.477-.659 0-1.172.2-1.54.6-.37.4-.553.918-.553 1.553v7.122h-2.474v-7.374c0-.6-.182-1.077-.547-1.43-.364-.354-.841-.53-1.43-.53-.4 0-.77.106-1.113.318-.341.212-.613.506-.812.883-.2.376-.3.812-.3 1.306v6.827h-2.52z"
+                            fill="#282828" />
+                        <path
+                            d="M81.898 18.993c-1.13 0-2.103-.259-2.92-.777-.818-.517-1.448-1.241-1.893-2.173-.447-.93-.67-2.014-.67-3.25 0-1.248.223-2.337.67-3.268.445-.93 1.075-1.652 1.893-2.167.817-.514 1.79-.77 2.92-.77 1.129 0 2.102.256 2.92.77.817.515 1.447 1.238 1.893 2.167.447.93.67 2.02.67 3.268 0 1.236-.223 2.32-.67 3.25-.446.932-1.076 1.656-1.893 2.173-.818.518-1.791.777-2.92.777zm0-2.074c.695 0 1.274-.182 1.74-.547.467-.365.818-.878 1.054-1.541.236-.665.354-1.448.354-2.35 0-.9-.118-1.684-.354-2.35-.236-.664-.587-1.177-1.053-1.541-.467-.365-1.048-.548-1.74-.548-.695 0-1.278.183-1.752.548-.476.364-.836.877-1.077 1.541-.242.666-.365 1.45-.365 2.35 0 .902.123 1.685.365 2.35.241.663.6 1.176 1.077 1.541.474.365 1.057.547 1.752.547z"
+                            fill="#282828" />
+                    </g>
+                </svg>
+            </a>
+        </div>
+
+        <div class="header-center">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search">
+                <button class="search-btn">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor"
+                            d="M20.87 20.17l-5.59-5.59C16.35 13.35 17 11.75 17 10c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.75 0 3.35-.65 4.58-1.71l5.59 5.59.7-.71zM10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
+                    </svg>
+                </button>
+            </div>
+            <button class="voice-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.42 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="header-right">
+            <button class="icon-btn create-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z" />
+                </svg>
+                <span>Create</span>
+            </button>
+            <button class="icon-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+                </svg>
+            </button>
+            <div class="avatar-btn">
+                <img src="https://i.pravatar.cc/32?img=68" alt="User">
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <a href="/" class="sidebar-item active">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z" />
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="{% url 'shorts' 1 %}" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33c-.77-.32-1.2-.5-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56L18 17.06c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.22-3.25z" />
+                </svg>
+                <span>Shorts</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" />
+                </svg>
+                <span>Subscriptions</span>
+            </a>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-header">You</div>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M11 7l6 3.5-6 3.5V7zm7 13H4V6H3v15h15v-1zm3-2H6V3h15v15zM7 4v13h13V4H7z" />
+                </svg>
+                <span>Your channel</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M14.97 16.95L10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM22 12c0 5.51-4.49 10-10 10S2 17.51 2 12h1c0 4.96 4.04 9 9 9s9-4.04 9-9-4.04-9-9-9C8.81 3 5.92 4.64 4.28 7.38c-.11.18-.22.37-.31.56L3 7.5V11H0V8.5l2.84-.84C4.76 4.2 8.15 2 12 2c5.51 0 10 4.49 10 10z" />
+                </svg>
+                <span>History</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M22 7H2v1h20V7zm-9 5H2v-1h11v1zm0 4H2v-1h11v1zm2 3v-8l7 4-7 4z" />
+                </svg>
+                <span>Playlists</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M10 8l6 4-6 4V8zm11-5v18H3V3h18zm-1 1H4v16h16V4z" />
+                </svg>
+                <span>Your videos</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M14.97 16.95L10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM12 3c-4.96 0-9 4.04-9 9s4.04 9 9 9 9-4.04 9-9-4.04-9-9-9m0-1c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
+                </svg>
+                <span>Watch later</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M18.77 11h-4.23l1.52-4.94C16.38 5.03 15.54 4 14.38 4c-.58 0-1.14.24-1.52.65L7 11H3v10h4h1h9.43c1.06 0 1.98-.67 2.19-1.61l1.34-6C21.23 12.15 20.18 11 18.77 11zM7 20H4v-8h3V20zM19.98 13.17l-1.34 6c-.07.29-.34.5-.65.5H8V11.39l5.6-6.06c.13-.14.28-.14.38-.14.27 0 .38.22.38.37l-1.77 5.77-0.13.67H18.77c.48 0 .87.36.87.84C19.64 12.84 19.62 12.53 19.98 13.17z" />
+                </svg>
+                <span>Liked videos</span>
+            </a>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-header">Subscriptions</div>
+            {% for sub in subscriptions %}
+            <a href="#" class="sidebar-item">
+                <img src="{{ sub.avatar }}" alt="{{ sub.name }}" class="sidebar-avatar">
+                <span>{{ sub.name }}</span>
+                {% if sub.live %}
+                <span class="live-badge">LIVE</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-header">Explore</div>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                </svg>
+                <span>Trending</span>
+            </a>
+            <a href="{% url 'explore' 'Music' %}" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M12 4v9.38c-.73-.84-1.8-1.38-3-1.38-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V8h6V4h-7zM9 19c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm9-12h-5V5h5v2z" />
+                </svg>
+                <span>Music</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M14 12c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM8.48 8.45l-.71-.7C6.68 8.83 6 10.34 6 12s.68 3.17 1.77 4.25l.71-.71C7.57 14.64 7 13.39 7 12s.57-2.64 1.48-3.55zM6.36 6.34l-.71-.71C4.04 7.25 3 9.51 3 12s1.04 4.75 2.65 6.37l.71-.71C5.01 16.31 4 14.26 4 12s1.01-4.31 2.36-5.66zM15.54 8.46l.71-.71C17.32 8.83 18 10.34 18 12s-.68 3.17-1.77 4.25l-.71-.71c.91-.9 1.48-2.15 1.48-3.54s-.57-2.64-1.46-3.54zM17.66 6.35l.71-.71C19.98 7.25 21 9.51 21 12s-1.02 4.75-2.63 6.36l-.71-.71C19.01 16.3 20 14.25 20 12s-.99-4.3-2.34-5.65zM12 20l-5-5h3V9h4v6h3l-5 5z" />
+                </svg>
+                <span>Live</span>
+            </a>
+            <a href="{% url 'explore' 'Gaming' %}" class="sidebar-item">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                        d="M10 12H8v2H6v-2H4v-2h2V8h2v2h2v2zm7 .5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5.67 1.5 1.5 1.5 1.5-.67 1.5-1.5zm3-3c0-.83-.67-1.5-1.5-1.5S17 8.67 17 9.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5zm-3.5-4.5c-1.88 0-3.63.59-5.08 1.59C9.82 5.2 7.51 4 5 4c-.46 0-.91.05-1.35.13C6.78 1.77 10.97 0 15.5 0l.47.02C19.12 1.06 21.5 4.22 21.5 8c0 1.18-.26 2.29-.72 3.29-.71-.25-1.47-.42-2.28-.49-.03-1.03-.46-1.97-1.16-2.67C16.1 6.9 14.67 6.5 13.5 6.5z" />
+                </svg>
+                <span>Gaming</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

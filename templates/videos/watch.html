@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="watch-page">
+    <!-- Video Player Section -->
+    <div class="watch-main">
+        <div class="video-player-container">
+            <video class="video-player" controls autoplay poster="{{ video.thumbnail }}">
+                <source src="{{ video.video_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Video Info -->
+        <div class="video-info-section">
+            <h1 class="watch-title">{{ video.title }}</h1>
+
+            <div class="video-actions-row">
+                <div class="channel-info-watch">
+                    <img src="{{ video.avatar }}" alt="{{ video.channel }}" class="channel-avatar-watch">
+                    <div class="channel-details-watch">
+                        <div class="channel-name-watch">
+                            {{ video.channel }}
+                            {% if video.channel_verified %}
+                            <svg class="verified-badge" viewBox="0 0 24 24" width="14" height="14">
+                                <path fill="currentColor"
+                                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z" />
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <span class="subscriber-count">1.2M subscribers</span>
+                    </div>
+                    <button class="subscribe-btn">Subscribe</button>
+                </div>
+
+                <div class="action-buttons">
+                    <div class="like-dislike-container">
+                        <button class="action-btn like-btn">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor"
+                                    d="M18.77 11h-4.23l1.52-4.94C16.38 5.03 15.54 4 14.38 4c-.58 0-1.14.24-1.52.65L7 11H3v10h4h1h9.43c1.06 0 1.98-.67 2.19-1.61l1.34-6C21.23 12.15 20.18 11 18.77 11zM7 20H4v-8h3V20zM19.98 13.17l-1.34 6c-.07.29-.34.5-.65.5H8V11.39l5.6-6.06c.13-.14.28-.14.38-.14.27 0 .38.22.38.37l-1.77 5.77-.13.67H18.77c.48 0 .87.36.87.84C19.64 12.84 19.98 13.17 19.98 13.17z" />
+                            </svg>
+                            <span>12K</span>
+                        </button>
+                        <button class="action-btn dislike-btn">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor"
+                                    d="M17 4h-1H6.57C5.5 4 4.59 4.67 4.38 5.61l-1.34 6C2.77 12.85 3.82 14 5.23 14h4.23l-1.52 4.94C7.62 19.97 8.46 21 9.62 21c.58 0 1.14-.24 1.52-.65L17 14h4V4h-4zm-1.07 9.11l-5.6 6.06c-.13.14-.28.14-.38.14-.27 0-.38-.22-.38-.37l1.77-5.77.13-.67H5.23c-.48 0-.87-.36-.87-.84 0-.06.03-.12.06-.18l1.34-6c.07-.29.34-.5.65-.5H16v8.13zM20 13h-3V5h3V13z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="action-btn share-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor"
+                                d="M15 5.63L20.66 12 15 18.37V14h-1c-3.96 0-7.14 1-9.75 3.09 1.84-4.07 5.11-6.4 9.89-7.1l.86-.13V5.63M14 3v6C6.22 10.13 3.11 15.33 2 21c2.78-3.97 6.44-6 12-6v6l8-9-8-9z" />
+                        </svg>
+                        <span>Share</span>
+                    </button>
+                    <button class="action-btn save-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor"
+                                d="M22 13h-4v4h-2v-4h-4v-2h4V7h2v4h4v2zm-8-6H2v1h12V7zM2 12h8v-1H2v1zm0 4h8v-1H2v1z" />
+                        </svg>
+                        <span>Save</span>
+                    </button>
+                    <button class="action-btn more-options-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor"
+                                d="M7.5 12c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm4.5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm6 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-box">
+                <div class="description-stats">
+                    <span>{{ video.views }}</span>
+                    <span>{{ video.time }}</span>
+                </div>
+                <p class="description-text">
+                    Welcome to this amazing video! Don't forget to like, comment and subscribe for more content.
+                    #youtube #content #video
+                </p>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <div class="comments-header">
+                    <span class="comments-count">1,234 Comments</span>
+                    <button class="sort-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M21 6H3V5h18v1zm-6 5H3v1h12v-1zm-6 6H3v1h6v-1z" />
+                        </svg>
+                        <span>Sort by</span>
+                    </button>
+                </div>
+                <div class="add-comment">
+                    <img src="https://i.pravatar.cc/40?img=68" alt="You" class="comment-avatar">
+                    <input type="text" placeholder="Add a comment..." class="comment-input">
+                </div>
+                <div class="comment">
+                    <img src="https://i.pravatar.cc/40?img=15" alt="User" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">@user1234</span>
+                            <span class="comment-time">2 days ago</span>
+                        </div>
+                        <p class="comment-text">This is an amazing video! Thanks for sharing.</p>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor"
+                                        d="M18.77 11h-4.23l1.52-4.94C16.38 5.03 15.54 4 14.38 4c-.58 0-1.14.24-1.52.65L7 11H3v10h4h1h9.43c1.06 0 1.98-.67 2.19-1.61l1.34-6C21.23 12.15 20.18 11 18.77 11z" />
+                                </svg>
+                                <span>142</span>
+                            </button>
+                            <button class="comment-action-btn">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor"
+                                        d="M17 4h-1H6.57C5.5 4 4.59 4.67 4.38 5.61l-1.34 6C2.77 12.85 3.82 14 5.23 14h4.23l-1.52 4.94C7.62 19.97 8.46 21 9.62 21c.58 0 1.14-.24 1.52-.65L17 14h4V4h-4z" />
+                                </svg>
+                            </button>
+                            <button class="comment-action-btn reply-btn">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommended Videos Sidebar -->
+    <aside class="watch-sidebar">
+        <h3 class="sidebar-title-watch">Up next</h3>
+        {% for rec in recommended %}
+        <a href="{% url 'watch' rec.id %}" class="recommended-card">
+            <div class="recommended-thumbnail">
+                <img src="{{ rec.thumbnail }}" alt="{{ rec.title }}">
+                <span class="recommended-duration">{{ rec.duration }}</span>
+            </div>
+            <div class="recommended-info">
+                <h4 class="recommended-title">{{ rec.title }}</h4>
+                <div class="recommended-channel">{{ rec.channel }}</div>
+                <div class="recommended-meta">{{ rec.views }} • {{ rec.time }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </aside>
+</div>
+{% endblock %}

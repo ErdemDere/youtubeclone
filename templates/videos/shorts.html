@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="shorts-scroll-container">
+    {% for short_item in all_shorts %}
+    <div class="shorts-section" id="short-{{ short_item.id }}" data-id="{{ short_item.id }}">
+        <div class="shorts-player-container">
+            <div class="shorts-player-wrapper">
+                <!-- Video Player -->
+                <video class="shorts-video" loop muted playsinline poster="{{ short_item.thumbnail }}">
+                    <source src="{{ short_item.video_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <!-- Shorts Overlay Info -->
+                <div class="shorts-overlay">
+                    <div class="shorts-info-bottom">
+                        <div class="shorts-channel-info">
+                            <img src="https://i.pravatar.cc/40?img={{ short_item.id }}" alt="{{ short_item.channel }}"
+                                class="shorts-channel-avatar">
+                            <span class="shorts-channel-name">@{{ short_item.channel }}</span>
+                            <button class="shorts-subscribe-btn">Subscribe</button>
+                        </div>
+                        <p class="shorts-description">{{ short_item.title }}</p>
+                        <div class="shorts-music-info">
+                            <svg viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor"
+                                    d="M12 4v9.38c-.73-.84-1.8-1.38-3-1.38-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V8h6V4h-7z" />
+                            </svg>
+                            <span class="music-text">Original Sound - {{ short_item.channel }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="shorts-actions">
+                    <button class="shorts-action-btn" onclick="toggleLike(this)">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <path fill="currentColor"
+                                d="M18.77 11h-4.23l1.52-4.94C16.38 5.03 15.54 4 14.38 4c-.58 0-1.14.24-1.52.65L7 11H3v10h4h1h9.43c1.06 0 1.98-.67 2.19-1.61l1.34-6C21.23 12.15 20.18 11 18.77 11z" />
+                        </svg>
+                        <span>{{ short_item.likes }}</span>
+                    </button>
+                    <button class="shorts-action-btn">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <path fill="currentColor"
+                                d="M17 4h-1H6.57C5.5 4 4.59 4.67 4.38 5.61l-1.34 6C2.77 12.85 3.82 14 5.23 14h4.23l-1.52 4.94C7.62 19.97 8.46 21 9.62 21c.58 0 1.14-.24 1.52-.65L17 14h4V4h-4z" />
+                        </svg>
+                        <span>Dislike</span>
+                    </button>
+                    <button class="shorts-action-btn">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <path fill="currentColor"
+                                d="M21 11v1h-2v2h-2v-2h-2v-1h2V9h2v2h2zm-7 5v-1H4v-3c0-1.3 2.69-2 4-2s4 .7 4 2v3h2zm4-7c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM8 8c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z" />
+                        </svg>
+                        <span>{{ short_item.views }}</span>
+                    </button>
+                    <button class="shorts-action-btn share-short-btn">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <path fill="currentColor"
+                                d="M15 5.63L20.66 12 15 18.37V14h-1c-3.96 0-7.14 1-9.75 3.09 1.84-4.07 5.11-6.4 9.89-7.1l.86-.13V5.63M14 3v6C6.22 10.13 3.11 15.33 2 21c2.78-3.97 6.44-6 12-6v6l8-9-8-9z" />
+                        </svg>
+                        <span>Share</span>
+                    </button>
+                    <button class="shorts-action-btn">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <path fill="currentColor"
+                                d="M7.5 12c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm4.5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm6 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initial Scroll to current short
+        const currentShortId = "{{ current_short.id }}";
+        const targetSection = document.getElementById(`short-${currentShortId}`);
+        if (targetSection) {
+            targetSection.scrollIntoView({ block: "start" });
+        }
+
+        // Intersection Observer for Auto-play/Pause
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.6
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (entry.isIntersecting) {
+                    video.play().catch(e => console.log("Auto-play prevented"));
+
+                    // Update URL without reload
+                    const shortId = entry.target.dataset.id;
+                    const newUrl = `/shorts/${shortId}/`;
+                    if (window.location.pathname !== newUrl) {
+                        window.history.pushState({ path: newUrl }, '', newUrl);
+                    }
+                } else {
+                    video.pause();
+                    video.currentTime = 0; // Optional: Reset video
+                }
+            });
+        }, options);
+
+        document.querySelectorAll('.shorts-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Mute/Unmute Logic
+        document.querySelectorAll('.shorts-video').forEach(video => {
+            video.addEventListener('click', function () {
+                const isMuted = !this.muted;
+                // Apply to all videos for consistency
+                document.querySelectorAll('.shorts-video').forEach(v => v.muted = isMuted);
+            });
+        });
+    });
+
+    function toggleLike(btn) {
+        btn.classList.toggle('liked');
+    }
+</script>
+{% endblock %}
