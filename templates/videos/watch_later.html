@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="watch-later-page">
+    <div class="page-header">
+        <div class="header-content">
+            <svg viewBox="0 0 24 24" width="32" height="32" class="watch-later-icon">
+                <path fill="var(--white)"
+                    d="M14.97 16.95L10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM12 3c-4.96 0-9 4.04-9 9s4.04 9 9 9 9-4.04 9-9-4.04-9-9-9m0-1c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
+            </svg>
+            <div class="header-text">
+                <h1>Watch later</h1>
+                <p>{{ videos|length }} videos • Updated today</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="video-grid">
+        {% for video in videos %}
+        <a href="{% url 'watch' video.id %}" class="video-card">
+            <div class="thumbnail-container">
+                <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="video-thumbnail">
+                <span class="video-duration">{{ video.duration }}</span>
+                <div class="thumbnail-overlay">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M8 5v14l11-7z" />
+                    </svg>
+                    <span>PLAY ALL</span>
+                </div>
+            </div>
+            <div class="video-info">
+                <img src="{{ video.avatar }}" alt="{{ video.channel }}" class="channel-avatar">
+                <div class="video-details">
+                    <h3 class="video-title">{{ video.title }}</h3>
+                    <p class="channel-name">{{ video.channel }}</p>
+                    <p class="video-meta">{{ video.views }} • {{ video.time }}</p>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon-circle">
+                <svg viewBox="0 0 24 24" width="48" height="48">
+                    <path fill="rgba(255,255,255,0.2)"
+                        d="M22 13h-4v4h-2v-4h-4v-2h4V7h2v4h4v2zm-8-6H2v1h12V7zM2 12h8v-1H2v1zm0 4h8v-1H2v1z" />
+                </svg>
+            </div>
+            <h2>Look like you haven't saved any videos to watch later yet.</h2>
+            <p>Videos you save for later will appear here.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .watch-later-page {
+        padding: 24px 0;
+    }
+
+    .page-header {
+        margin-bottom: 32px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .watch-later-icon {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        border-radius: 50%;
+    }
+
+    .header-text h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--white);
+    }
+
+    .header-text p {
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 0;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .empty-icon-circle {
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+
+    .empty-state h2 {
+        font-size: 20px;
+        color: var(--white);
+        margin-bottom: 12px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+    }
+
+    .thumbnail-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.2s;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .video-card:hover .thumbnail-overlay {
+        opacity: 1;
+    }
+</style>
+{% endblock %}

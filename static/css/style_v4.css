@@ -129,18 +129,18 @@ img {
     flex: 1;
     height: 40px;
     padding: 0 16px;
-    background-color: var(--bg-primary);
+    background-color: #121212;
     border: 1px solid var(--border-color);
     border-radius: 40px 0 0 40px;
     color: var(--text-primary);
     font-size: 16px;
     outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .search-input:focus {
     border-color: #1c62b9;
-    box-shadow: inset 0 0 0 1px #1c62b9;
+    box-shadow: inset 0 0 0 1px #1c62b9, 0 0 8px rgba(28, 98, 185, 0.3);
 }
 
 .search-input::placeholder {
@@ -356,16 +356,23 @@ img {
     font-size: 14px;
     font-weight: 500;
     white-space: nowrap;
-    transition: all var(--transition-fast);
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .category-chip:hover {
     background-color: var(--bg-hover);
+    transform: translateY(-1px);
+}
+
+.category-chip:active {
+    transform: scale(0.95);
 }
 
 .category-chip.active {
     background-color: var(--bg-chip-active);
     color: var(--text-chip-active);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 /* Video Grid */
@@ -377,11 +384,15 @@ img {
 
 .video-card {
     cursor: pointer;
-    transition: transform var(--transition-fast);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 12px;
+    padding: 4px;
 }
 
 .video-card:hover {
-    transform: scale(1.02);
+    transform: translateY(-4px);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .thumbnail-container {
@@ -448,6 +459,7 @@ img {
     margin-bottom: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -586,6 +598,7 @@ img {
     margin-bottom: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -911,6 +924,62 @@ img {
     transform: scale(1.02);
 }
 
+.subscribe-btn.subscribed {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Subscribe Container */
+.subscribe-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Bell Notification */
+.bell-notification {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.8);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.bell-notification.show {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    animation: bellRing 0.5s ease 0.2s;
+}
+
+@keyframes bellRing {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: rotate(-10deg);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: rotate(10deg);
+    }
+}
+
+.bell-icon {
+    color: var(--accent-red);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5));
+}
+
+
 /* Action Buttons */
 .action-buttons {
     display: flex;
@@ -953,6 +1022,63 @@ img {
 
 .more-options-btn {
     padding: 10px;
+}
+
+/* Like/Dislike Active States */
+.action-btn.liked,
+.action-btn.disliked,
+.shorts-action-btn.liked,
+.shorts-action-btn.disliked {
+    color: #fff;
+}
+
+.action-btn.liked svg,
+.action-btn.disliked svg,
+.shorts-action-btn.liked svg,
+.shorts-action-btn.disliked svg {
+    color: #fff;
+}
+
+/* SVG Fill Toggling */
+.svg-filled {
+    display: none;
+}
+
+.action-btn.liked .svg-outline,
+.action-btn.disliked .svg-outline,
+.shorts-action-btn.liked .svg-outline,
+.shorts-action-btn.disliked .svg-outline {
+    display: none;
+}
+
+.action-btn.liked .svg-filled,
+.action-btn.disliked .svg-filled,
+.shorts-action-btn.liked .svg-filled,
+.shorts-action-btn.disliked .svg-filled {
+    display: block;
+}
+
+/* Glow Animation */
+.btn-glow {
+    position: relative;
+    animation: buttonGlow 1s ease forwards;
+}
+
+@keyframes buttonGlow {
+    0% {
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        background-color: var(--bg-hover);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        background-color: var(--bg-secondary);
+    }
 }
 
 /* Description Box */
@@ -1192,6 +1318,7 @@ img {
     margin-bottom: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1388,6 +1515,7 @@ img {
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1404,6 +1532,48 @@ img {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Shorts Bell Icon & Interaction */
+.shorts-bell-icon {
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.shorts-bell-icon.show-bell {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.shorts-bell-icon.show-bell svg {
+    animation: shortsBellRing 0.5s ease 5;
+}
+
+@keyframes shortsBellRing {
+
+    0%,
+    100% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    75% {
+        transform: rotate(15deg);
+    }
+}
+
+.shorts-subscribe-btn.subscribed {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    opacity: 0.8;
 }
 
 /* Shorts Action Buttons */

@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import Http404
+from django.http import Http404, JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Static video data (no database)
 VIDEOS = [
@@ -11,7 +14,7 @@ VIDEOS = [
         'views': '2.5M views',
         'time': '3 days ago',
         'duration': '9:56',
-        'thumbnail': 'https://picsum.photos/seed/vid1/320/180',
+        'thumbnail': '/static/images/thumbnails/nature_doc.png',
         'avatar': 'https://i.pravatar.cc/40?img=1',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         'category': 'Nature',
@@ -24,10 +27,11 @@ VIDEOS = [
         'views': '1.8M views',
         'time': '1 week ago',
         'duration': '10:53',
-        'thumbnail': 'https://picsum.photos/seed/vid2/320/180',
+        'thumbnail': '/static/images/thumbnails/python_course.png',
         'avatar': 'https://i.pravatar.cc/40?img=2',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
         'category': 'Learning',
+        'channel': 'CodeWithMe',
     },
     {
         'id': 3,
@@ -37,7 +41,7 @@ VIDEOS = [
         'views': '890K views',
         'time': '2 days ago',
         'duration': '0:15',
-        'thumbnail': 'https://picsum.photos/seed/delicious/320/180',
+        'thumbnail': '/static/images/thumbnails/istanbul_food.png',
         'avatar': 'https://i.pravatar.cc/40?img=3',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
         'category': 'Cooking',
@@ -50,10 +54,11 @@ VIDEOS = [
         'views': '3.2M views',
         'time': '5 hours ago',
         'duration': '0:15',
-        'thumbnail': 'https://picsum.photos/seed/vid4/320/180',
+        'thumbnail': '/static/images/thumbnails/gaming_moments.png',
         'avatar': 'https://i.pravatar.cc/40?img=4',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
         'category': 'Gaming',
+        'channel': 'MrBeast',
     },
     {
         'id': 5,
@@ -63,7 +68,7 @@ VIDEOS = [
         'views': '567K views',
         'time': '4 days ago',
         'duration': '0:15',
-        'thumbnail': 'https://picsum.photos/seed/vid5/320/180',
+        'thumbnail': '/static/images/thumbnails/minecraft_house.png',
         'avatar': 'https://i.pravatar.cc/40?img=5',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
         'category': 'Gaming',
@@ -76,7 +81,7 @@ VIDEOS = [
         'views': '4.1M views',
         'time': '1 month ago',
         'duration': '0:15',
-        'thumbnail': 'https://picsum.photos/seed/vid6/320/180',
+        'thumbnail': '/static/images/thumbnails/life_hacks.png',
         'avatar': 'https://i.pravatar.cc/40?img=6',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
         'category': 'Learning',
@@ -106,6 +111,7 @@ VIDEOS = [
         'avatar': 'https://i.pravatar.cc/40?img=8',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
         'category': 'Learning',
+        'channel': 'TechReview',
     },
     {
         'id': 9,
@@ -132,6 +138,7 @@ VIDEOS = [
         'avatar': 'https://i.pravatar.cc/40?img=12',
         'video_url': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
         'category': 'Music',
+        'channel': 'PewDiePie',
     },
     {
         'id': 11,
@@ -158,7 +165,7 @@ def explore(request, category):
         'videos': filtered_videos,
         'shorts': SHORTS[:6], # Show some shorts
         'categories': CATEGORIES,
-        'subscriptions': SUBSCRIPTIONS,
+        'subscriptions': get_current_subscriptions(request),
         'active_category': category,
     }
     return render(request, 'videos/home.html', context)
@@ -262,6 +269,44 @@ CATEGORIES = [
     'Sports', 'News', 'Learning', 'Fashion', 'Comedy', 'Tech'
 ]
 
+PLAYLISTS = [
+    {
+        'id': 'liked',
+        'title': 'Liked videos',
+        'video_count': 0, # Will be dynamic
+        'thumbnail': '/static/images/thumbnails/nature_doc.png',
+        'is_private': True,
+        'description': 'Videos you have liked',
+    },
+    {
+        'id': 'python',
+        'title': 'Python Learning Path',
+        'video_count': 3,
+        'thumbnail': '/static/images/thumbnails/python_course.png',
+        'is_private': False,
+        'description': 'Master Python from zero to hero with these hand-picked tutorials.',
+        'video_ids': [2, 8, 6] 
+    },
+    {
+        'id': 'gaming',
+        'title': 'Epic Gaming Moments',
+        'video_count': 2,
+        'thumbnail': '/static/images/thumbnails/gaming_moments.png',
+        'is_private': False,
+        'description': 'The absolute best gaming clips from across the platform.',
+        'video_ids': [4, 5]
+    },
+    {
+        'id': 'nature',
+        'title': 'Nature & Relaxation',
+        'video_count': 2,
+        'thumbnail': 'https://picsum.photos/seed/vid7/320/180',
+        'is_private': False,
+        'description': 'Calm your mind with beautiful nature footage and soothing sounds.',
+        'video_ids': [1, 7]
+    }
+]
+
 SUBSCRIPTIONS = [
     {'name': 'MrBeast', 'avatar': 'https://i.pravatar.cc/32?img=10', 'live': False},
     {'name': 'PewDiePie', 'avatar': 'https://i.pravatar.cc/32?img=11', 'live': True},
@@ -270,14 +315,40 @@ SUBSCRIPTIONS = [
     {'name': 'TechReview', 'avatar': 'https://i.pravatar.cc/32?img=14', 'live': False},
 ]
 
+def get_current_subscriptions(request):
+    """Helper to get merged list of default and session-based subscriptions."""
+    session_subs = request.session.get('my_subscriptions', [])
+    # Convert list of dicts to list of names for default check
+    default_names = [s['name'] for s in SUBSCRIPTIONS]
+    
+    # Merge default and session ones (avoid duplicates)
+    merged = list(SUBSCRIPTIONS)
+    for sub in session_subs:
+        if sub['name'] not in default_names:
+            merged.append(sub)
+    return merged
+
 def home(request):
     context = {
         'videos': VIDEOS,
         'shorts': SHORTS,
         'categories': CATEGORIES,
-        'subscriptions': SUBSCRIPTIONS,
+        'subscriptions': get_current_subscriptions(request),
     }
     return render(request, 'videos/home.html', context)
+
+def subscriptions(request):
+    """View to display user subscriptions."""
+    all_subs = get_current_subscriptions(request)
+    subscribed_channels = [sub['name'] for sub in all_subs]
+    subscribed_videos = [v for v in VIDEOS if v['channel'] in subscribed_channels]
+    
+    context = {
+        'subscriptions': all_subs,
+        'videos': subscribed_videos,
+    }
+    return render(request, 'videos/subscriptions.html', context)
+
 
 def get_video_by_id(video_id):
     """Helper function to get video by ID from static data."""
@@ -286,21 +357,40 @@ def get_video_by_id(video_id):
             return video
     return None
 
+
+
 def watch(request, video_id):
     """View for watching a single video."""
     video = get_video_by_id(video_id)
     if video is None:
         raise Http404("Video not found")
     
+    # Record watched video in session history
+    history = request.session.get('history', [])
+    if video_id not in history:
+        history.append(video_id)
+        request.session['history'] = history
+
     # Get recommended videos (all videos except current)
     recommended = [v for v in VIDEOS if v['id'] != video_id]
     
     context = {
         'video': video,
         'recommended': recommended,
-        'subscriptions': SUBSCRIPTIONS,
+        'subscriptions': get_current_subscriptions(request),
     }
     return render(request, 'videos/watch.html', context)
+
+
+def history(request):
+    """View to display watched video history."""
+    history_ids = request.session.get('history', [])
+    watched_videos = [v for v in VIDEOS if v['id'] in history_ids]
+    context = {
+        'videos': watched_videos,
+        'subscriptions': get_current_subscriptions(request),
+    }
+    return render(request, 'videos/history.html', context)
 
 def get_short_by_id(short_id):
     """Helper function to get short by ID from static data."""
@@ -323,3 +413,170 @@ def shorts(request, short_id):
         'all_shorts': all_shorts_sorted,
     }
     return render(request, 'videos/shorts.html', context)
+
+
+def liked_videos(request):
+    """View to display liked videos."""
+    liked_ids = request.session.get('liked_videos', [])
+    # Preserve order of liking by iterating over liked_ids
+    liked_list = []
+    for vid_id in reversed(liked_ids):
+        video = get_video_by_id(vid_id)
+        if video:
+            liked_list.append(video)
+            
+    context = {
+        'videos': liked_list,
+        'subscriptions': get_current_subscriptions(request),
+    }
+    return render(request, 'videos/liked_videos.html', context)
+
+
+@csrf_exempt
+@require_POST
+def toggle_like(request):
+    """AJAX view to toggle like state for a video."""
+    try:
+        data = json.loads(request.body)
+        video_id = int(data.get('video_id'))
+    except (ValueError, TypeError, json.JSONDecodeError):
+        return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+
+    liked_videos = request.session.get('liked_videos', [])
+    
+    if video_id in liked_videos:
+        liked_videos.remove(video_id)
+        action = 'unliked'
+    else:
+        liked_videos.append(video_id)
+        action = 'liked'
+        
+    request.session['liked_videos'] = liked_videos
+    request.session.modified = True
+    
+    return JsonResponse({'status': 'success', 'action': action})
+
+
+@csrf_exempt
+@require_POST
+def toggle_subscription(request):
+    """AJAX view to toggle channel subscription status."""
+    try:
+        data = json.loads(request.body)
+        name = data.get('name')
+        avatar = data.get('avatar')
+    except (ValueError, TypeError, json.JSONDecodeError):
+        return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+
+    my_subs = request.session.get('my_subscriptions', [])
+    
+    # Check if already in session subs
+    found_idx = -1
+    for i, sub in enumerate(my_subs):
+        if sub['name'] == name:
+            found_idx = i
+            break
+            
+    if found_idx != -1:
+        my_subs.pop(found_idx)
+        action = 'unsubscribed'
+    else:
+        my_subs.append({'name': name, 'avatar': avatar, 'live': False})
+        action = 'subscribed'
+        
+    request.session['my_subscriptions'] = my_subs
+    request.session.modified = True
+    
+    return JsonResponse({'status': 'success', 'action': action})
+
+def playlists(request):
+    """Gallery view of all playlists."""
+    # Dynamic count for Liked videos
+    liked_ids = request.session.get('liked_videos', [])
+    
+    updated_playlists = []
+    for pl in PLAYLISTS:
+        p_copy = dict(pl)
+        if pl['id'] == 'liked':
+            p_copy['video_count'] = len(liked_ids)
+            # Update thumbnail if there are liked videos
+            if liked_ids:
+                last_liked = get_video_by_id(liked_ids[-1])
+                if last_liked:
+                    p_copy['thumbnail'] = last_liked['thumbnail']
+        updated_playlists.append(p_copy)
+
+    context = {
+        'playlists': updated_playlists,
+        'subscriptions': get_current_subscriptions(request),
+    }
+    return render(request, 'videos/playlists.html', context)
+
+def playlist_detail(request, playlist_id):
+    """Detailed view of a single playlist."""
+    playlist = next((p for p in PLAYLISTS if p['id'] == playlist_id), None)
+    if not playlist:
+        raise Http404("Playlist not found")
+    
+    video_list = []
+    
+    if playlist['id'] == 'liked':
+        liked_ids = request.session.get('liked_videos', [])
+        for vid_id in reversed(liked_ids):
+            video = get_video_by_id(vid_id)
+            if video:
+                video_list.append(video)
+    else:
+        for vid_id in playlist.get('video_ids', []):
+            video = get_video_by_id(vid_id)
+            if video:
+                video_list.append(video)
+                
+    context = {
+        'playlist': playlist,
+        'videos': video_list,
+        'subscriptions': get_current_subscriptions(request),
+    }
+    return render(request, 'videos/playlist_detail.html', context)
+
+
+@csrf_exempt
+@require_POST
+def toggle_watch_later(request):
+    """AJAX view to toggle watch later state for a video."""
+    try:
+        data = json.loads(request.body)
+        video_id = int(data.get('video_id'))
+    except (ValueError, TypeError, json.JSONDecodeError):
+        return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+
+    watch_later = request.session.get('watch_later', [])
+    
+    if video_id in watch_later:
+        watch_later.remove(video_id)
+        action = 'removed'
+    else:
+        watch_later.append(video_id)
+        action = 'saved'
+        
+    request.session['watch_later'] = watch_later
+    request.session.modified = True
+    
+    return JsonResponse({'status': 'success', 'action': action})
+
+
+def watch_later(request):
+    """View to display saved watch later videos."""
+    watch_later_ids = request.session.get('watch_later', [])
+    saved_list = []
+    # Preserve order (most recent first)
+    for vid_id in reversed(watch_later_ids):
+        video = get_video_by_id(vid_id)
+        if video:
+            saved_list.append(video)
+            
+    context = {
+        'videos': saved_list,
+        'subscriptions': get_current_subscriptions(request),
+    }
+    return render(request, 'videos/watch_later.html', context)

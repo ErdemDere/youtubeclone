@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="playlists-page">
+    <div class="page-header">
+        <h1>Playlists</h1>
+        <div class="header-actions">
+            <button class="action-chip active">All</button>
+            <button class="action-chip">Created by me</button>
+            <button class="action-chip">Saved</button>
+        </div>
+    </div>
+
+    <div class="playlist-grid">
+        {% for pl in playlists %}
+        <a href="{% url 'playlist_detail' pl.id %}" class="playlist-card-link">
+            <div class="playlist-card">
+                <div class="playlist-thumbnail-container">
+                    <img src="{{ pl.thumbnail }}" alt="{{ pl.title }}" class="playlist-thumbnail">
+                    <div class="playlist-overlay">
+                        <div class="video-count-info">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor"
+                                    d="M22 7H2v1h20V7zm-9 5H2v-1h11v1zm0 4H2v-1h11v1zm2 3v-8l7 4-7 4z" />
+                            </svg>
+                            <span>{{ pl.video_count }} videos</span>
+                        </div>
+                        <div class="play-all-overlay">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor" d="M8 5v14l11-7z" />
+                            </svg>
+                            <span>PLAY ALL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="playlist-info">
+                    <h3 class="playlist-title">{{ pl.title }}</h3>
+                    <p class="playlist-meta">
+                        {% if pl.is_private %}
+                        <svg viewBox="0 0 24 24" width="12" height="12" class="lock-icon">
+                            <path fill="currentColor"
+                                d="M12 2c-2.76 0-5 2.24-5 5v2H5v11h14V9h-2V7c0-2.76-2.24-5-5-5zm3 7H9V7c0-1.66 1.34-3 3-3s3 1.34 3 3v2z" />
+                        </svg>
+                        Private •
+                        {% endif %}
+                        View full playlist
+                    </p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .playlists-page {
+        padding: 24px 0;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--white);
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .action-chip {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: var(--white);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .action-chip:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .action-chip.active {
+        background: var(--white);
+        color: #0f0f0f;
+    }
+
+    .playlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
+    }
+
+    .playlist-card-link {
+        text-decoration: none;
+    }
+
+    .playlist-card {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .playlist-thumbnail-container {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #272727;
+    }
+
+    .playlist-thumbnail {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .playlist-card:hover .playlist-thumbnail {
+        transform: scale(1.05);
+    }
+
+    .playlist-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    /* Video count always visible on a portion of the thumbnail? 
+       Actually YouTube has a side bar for counts on playlists. 
+       Let's use a blurred right-side bar for the count.
+    */
+    .video-count-info {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 40%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(4px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        z-index: 2;
+    }
+
+    .video-count-info span {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .play-all-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 3;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .playlist-card:hover .play-all-overlay {
+        opacity: 1;
+    }
+
+    .playlist-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .playlist-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--white);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .playlist-meta {
+        font-size: 12px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 500;
+    }
+
+    .lock-icon {
+        color: var(--text-secondary);
+    }
+</style>
+{% endblock %}
