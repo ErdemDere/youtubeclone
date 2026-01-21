@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-page">
+    <!-- Channel Banner -->
+    <div class="channel-banner">
+        <img src="{{ channel.banner }}" alt="Channel Banner">
+    </div>
+
+    <!-- Channel Header -->
+    <div class="channel-header">
+        <div class="channel-info-container">
+            <div class="channel-avatar-large">
+                <img src="{{ channel.avatar }}" alt="{{ channel.name }}">
+            </div>
+            <div class="channel-details">
+                <h1 class="channel-name">{{ channel.name }}</h1>
+                <div class="channel-meta">
+                    <span class="channel-handle">{{ channel.handle }}</span>
+                    <span class="meta-separator">•</span>
+                    <span class="subscriber-count">{{ channel.subscribers }} subscribers</span>
+                    <span class="meta-separator">•</span>
+                    <span class="video-count">{{ channel.total_videos }} videos</span>
+                </div>
+                <div class="channel-description-preview">
+                    {{ channel.description|truncatewords:20 }}
+                </div>
+                <button class="customize-channel-btn">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor"
+                            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                    </svg>
+                    Customize channel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="profile-tabs">
+        <button class="profile-tab active" data-tab="home">
+            <span>HOME</span>
+        </button>
+        <button class="profile-tab" data-tab="videos">
+            <span>VIDEOS</span>
+        </button>
+        <button class="profile-tab" data-tab="playlists">
+            <span>PLAYLISTS</span>
+        </button>
+        <button class="profile-tab" data-tab="about">
+            <span>ABOUT</span>
+        </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="profile-content">
+        <!-- Home Tab -->
+        <div class="tab-panel active" id="home-tab">
+            <!-- Stats Cards -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32">
+                            <path fill="currentColor"
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.videos_watched }}</div>
+                        <div class="stat-label">Videos Watched</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32">
+                            <path fill="currentColor"
+                                d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.videos_liked }}</div>
+                        <div class="stat-label">Videos Liked</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32">
+                            <path fill="currentColor"
+                                d="M22 7H2v1h20V7zm-9 5H2v-1h11v1zm0 4H2v-1h11v1zm2 3v-8l7 4-7 4z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.playlists_created }}</div>
+                        <div class="stat-label">Playlists</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32">
+                            <path fill="currentColor"
+                                d="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.subscriptions_count }}</div>
+                        <div class="stat-label">Subscriptions</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Videos -->
+            <div class="profile-section">
+                <h2 class="section-title">Featured Videos</h2>
+                <div class="video-grid">
+                    {% for video in videos %}
+                    <a href="{% url 'watch' video.id %}" class="video-card-link">
+                        <div class="video-card">
+                            <div class="thumbnail-container">
+                                <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="thumbnail">
+                                <span class="duration">{{ video.duration }}</span>
+                            </div>
+                            <div class="video-info">
+                                <img src="{{ video.avatar }}" alt="{{ video.channel }}" class="channel-avatar">
+                                <div class="video-details">
+                                    <h3 class="video-title">{{ video.title }}</h3>
+                                    <p class="channel-name">
+                                        {{ video.channel }}
+                                        {% if video.channel_verified %}
+                                        <svg class="verified-badge" viewBox="0 0 24 24" width="14" height="14">
+                                            <path fill="currentColor"
+                                                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z" />
+                                        </svg>
+                                        {% endif %}
+                                    </p>
+                                    <p class="video-meta">{{ video.views }} • {{ video.time }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos Tab -->
+        <div class="tab-panel" id="videos-tab">
+            <div class="profile-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Videos</h2>
+                    <div class="sort-dropdown">
+                        <select class="sort-select">
+                            <option>Latest</option>
+                            <option>Popular</option>
+                            <option>Oldest</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="video-grid">
+                    {% for video in all_videos %}
+                    <a href="{% url 'watch' video.id %}" class="video-card-link">
+                        <div class="video-card">
+                            <div class="thumbnail-container">
+                                <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="thumbnail">
+                                <span class="duration">{{ video.duration }}</span>
+                            </div>
+                            <div class="video-info">
+                                <img src="{{ video.avatar }}" alt="{{ video.channel }}" class="channel-avatar">
+                                <div class="video-details">
+                                    <h3 class="video-title">{{ video.title }}</h3>
+                                    <p class="video-meta">{{ video.views }} • {{ video.time }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Playlists Tab -->
+        <div class="tab-panel" id="playlists-tab">
+            <div class="profile-section">
+                <h2 class="section-title">Created Playlists</h2>
+                <div class="playlists-grid">
+                    {% for playlist in playlists %}
+                    <a href="{% url 'playlist_detail' playlist.id %}" class="playlist-card-link">
+                        <div class="playlist-card">
+                            <div class="playlist-thumbnail-container">
+                                <img src="{{ playlist.thumbnail }}" alt="{{ playlist.title }}"
+                                    class="playlist-thumbnail">
+                                <div class="playlist-overlay">
+                                    <div class="playlist-count">{{ playlist.video_count }}</div>
+                                    <svg viewBox="0 0 24 24" width="48" height="48">
+                                        <path fill="white"
+                                            d="M22 7H2v1h20V7zm-9 5H2v-1h11v1zm0 4H2v-1h11v1zm2 3v-8l7 4-7 4z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="playlist-info">
+                                <h3 class="playlist-title">{{ playlist.title }}</h3>
+                                <p class="playlist-meta">
+                                    {% if playlist.is_private %}
+                                    <svg viewBox="0 0 24 24" width="14" height="14">
+                                        <path fill="currentColor"
+                                            d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6z" />
+                                    </svg>
+                                    Private •
+                                    {% endif %}
+                                    {{ playlist.video_count }} videos
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- About Tab -->
+        <div class="tab-panel" id="about-tab">
+            <div class="profile-section">
+                <div class="about-content">
+                    <div class="about-section">
+                        <h2 class="section-title">Description</h2>
+                        <p class="about-description">{{ channel.description }}</p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2 class="section-title">Channel Details</h2>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor"
+                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                                </svg>
+                                <div class="detail-info">
+                                    <div class="detail-label">Joined</div>
+                                    <div class="detail-value">{{ channel.joined_date }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor"
+                                        d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                                </svg>
+                                <div class="detail-info">
+                                    <div class="detail-label">Total Views</div>
+                                    <div class="detail-value">{{ channel.total_views }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor"
+                                        d="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" />
+                                </svg>
+                                <div class="detail-info">
+                                    <div class="detail-label">Subscribers</div>
+                                    <div class="detail-value">{{ channel.subscribers }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2 class="section-title">Stats</h2>
+                        <div class="stats-list">
+                            <div class="stat-row">
+                                <span class="stat-label">Videos watched:</span>
+                                <span class="stat-value">{{ stats.videos_watched }}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Videos liked:</span>
+                                <span class="stat-value">{{ stats.videos_liked }}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Playlists created:</span>
+                                <span class="stat-value">{{ stats.playlists_created }}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Channel subscriptions:</span>
+                                <span class="stat-value">{{ stats.subscriptions_count }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

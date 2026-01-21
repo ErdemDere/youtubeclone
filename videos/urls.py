@@ -15,6 +15,8 @@ urlpatterns = [
     path('playlist/<str:playlist_id>/', views.playlist_detail, name='playlist_detail'),
     path('watch-later/', views.watch_later, name='watch_later'),
     path('toggle-watch-later/', views.toggle_watch_later, name='toggle_watch_later'),
+    path('profile/', views.profile, name='profile'),
 ]
+
 
 

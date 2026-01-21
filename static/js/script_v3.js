@@ -301,6 +301,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Profile Page Tab Switching
+    const profileTabs = document.querySelectorAll('.profile-tab');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    if (profileTabs.length > 0) {
+        profileTabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                const targetTab = this.getAttribute('data-tab');
+
+                // Remove active class from all tabs and panels
+                profileTabs.forEach(t => t.classList.remove('active'));
+                tabPanels.forEach(p => p.classList.remove('active'));
+
+                // Add active class to clicked tab
+                this.classList.add('active');
+
+                // Show corresponding panel
+                const targetPanel = document.getElementById(targetTab + '-tab');
+                if (targetPanel) {
+                    targetPanel.classList.add('active');
+                }
+            });
+        });
+    }
+
     // Console welcome message
     console.log('%c YouTube Clone v3 ', 'background: #ff0000; color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 4px;');
     console.log('Welcome to YouTube Clone! Built with Django.');

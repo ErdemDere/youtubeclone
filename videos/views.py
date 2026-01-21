@@ -580,3 +580,60 @@ def watch_later(request):
         'subscriptions': get_current_subscriptions(request),
     }
     return render(request, 'videos/watch_later.html', context)
+
+
+def profile(request):
+    """View to display user profile/channel page."""
+    # Get user's content from session
+    liked_ids = request.session.get('liked_videos', [])
+    watch_later_ids = request.session.get('watch_later', [])
+    history_ids = request.session.get('history', [])
+    
+    # Get videos for each category
+    liked_videos = [get_video_by_id(vid_id) for vid_id in liked_ids if get_video_by_id(vid_id)]
+    watch_later_videos = [get_video_by_id(vid_id) for vid_id in watch_later_ids if get_video_by_id(vid_id)]
+    history_videos = [get_video_by_id(vid_id) for vid_id in history_ids if get_video_by_id(vid_id)]
+    
+    # Mock channel data (in a real app, this would come from User model)
+    channel_data = {
+        'name': 'My Channel',
+        'handle': '@mychannel',
+        'subscribers': '125K',
+        'total_videos': len(VIDEOS),  # Mock: all available videos
+        'total_views': '2.5M',
+        'joined_date': 'Jan 15, 2024',
+        'description': 'Welcome to my channel! I create content about gaming, music, and learning. Subscribe to stay updated with my latest videos!',
+        'banner': 'https://picsum.photos/seed/banner/1600/400',
+        'avatar': '/static/images/my_avatar.jpg',
+    }
+    
+    # Statistics
+    stats = {
+        'videos_watched': len(history_ids),
+        'videos_liked': len(liked_ids),
+        'playlists_created': len([p for p in PLAYLISTS if p['id'] != 'liked']),
+        'subscriptions_count': len(get_current_subscriptions(request)),
+    }
+    
+    # Get user's playlists
+    user_playlists = []
+    for pl in PLAYLISTS:
+        p_copy = dict(pl)
+        if pl['id'] == 'liked':
+            p_copy['video_count'] = len(liked_ids)
+            if liked_ids:
+                last_liked = get_video_by_id(liked_ids[-1])
+                if last_liked:
+                    p_copy['thumbnail'] = last_liked['thumbnail']
+        user_playlists.append(p_copy)
+    
+    context = {
+        'channel': channel_data,
+        'stats': stats,
+        'videos': VIDEOS[:6],  # Featured videos (first 6)
+        'all_videos': VIDEOS,  # All videos for videos tab
+        'liked_videos': liked_videos,
+        'playlists': user_playlists,
+        'subscriptions': get_current_subscriptions(request),
+    }
+    return render(request, 'videos/profile.html', context)
